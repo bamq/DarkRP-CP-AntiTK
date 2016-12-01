@@ -20,4 +20,4 @@ hook.Add( "PlayerShouldTakeDamage", "CPAntiTK_PlayerShouldTakeDamage", function(
 
 	end
 
-end
+end )
