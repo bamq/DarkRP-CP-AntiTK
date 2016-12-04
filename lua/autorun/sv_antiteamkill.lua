@@ -1,7 +1,9 @@
 
 if CLIENT then return end
 
-MsgN( "[CP AntiTK] Active - created by bamq." )
+local cpantitk_version = "1.1"
+
+MsgN( "[CP AntiTK] v" .. cpantitk_version .. " Active - created by bamq." )
 
 -- Output to console when a Civil Protection attempts to damage another Civil Protection.
 local should_notify = true
