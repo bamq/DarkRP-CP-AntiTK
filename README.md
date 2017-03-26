@@ -1,6 +1,15 @@
-DarkRP CP AntiTK
-================
+# DarkRP CP AntiTK
+A Civil Protection anti-teamkill addon for Garry's Mod DarkRP.
 
-This is a server-side addon that will make it so Civil Protection jobs won't be able to inflict damage on other Civil Protection, and by default will display a message in console when a CP attempts to damage another CP.
+## Features:
+* Stops Civil Protection jobs from dealing team damage to other Civil Protection jobs.
+* Logs to console when this event occurs (configurable).
 
-To install, download the ZIP and extract to addons folder of the server.
+## Installation:
+* Download the latest release from the release page.
+* Extract to your addons folder on the server.
+* Restart your server.
+
+## Contributing:
+
+Please see [CONTRIBUTING.md](https://github.com/bamq/DarkRP-CP-AntiTK/blob/master/CONTRIBUTING.md)
