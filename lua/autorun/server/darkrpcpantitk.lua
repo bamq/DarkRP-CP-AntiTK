@@ -29,15 +29,15 @@
 
 CPAntiTK = CPAntiTK or {}
 CPAntiTK.VERSION = "1.2 [Edited by Taxin2012]"
-CPAntiTK.damaged = nil --Dont touch this / Не трогайте это
 CPAntiTK.Config = CPAntiTK.Config or {}
 
 -- /// CONFIG /// --
 
 CPAntiTK.Config.LogToConsole			= true --Should a message be printed in console when this event occurs? / Показывать сообщение в консоли?
-CPAntiTK.Config.CanDamage				= false --Can CP damaged other CP? / Сможет ли нанести урон один CP другому?
+CPAntiTK.Config.CanDamage				= false --Can CP damaged other CP? / Сможет ли нанести урон один CP другому CP?
+CPAntiTK.Config.Notify					= true	 --Make a notification for all CPs on server when CP attack other CP? / Сделать уведомление для всех CP на сервере, когда CP атакует другого CP?
 CPAntiTK.Config.cpjobs = { "TEAM_POLICE" , "TEAM_CHIEF" , "TEAM_MAYOR"  } --What kind of jobs will be banned? / Какие работы будут забанены?
-CPAntiTK.Config.bantime = 1200 --Demote time / Время Разбана профессии
+CPAntiTK.Config.bantime = 300 --Demote time / Время Разбана профессии
 CPAntiTK.demote = 10 --Number of hits / Кол-во попаданий
 
 -- /// CONFIG /// --
@@ -73,18 +73,22 @@ MsgN( "DarkRP CP AntiTK v" .. CPAntiTK.VERSION .. " initialized. Created by bamq
 
 hook.Add( "PlayerShouldTakeDamage", "CPAntiTK_PlayerShouldTakeDamage", function( vict, att )
 	if IsValid( vict ) and vict:IsPlayer() and vict:isCP() and IsValid( att ) and att:IsPlayer() and att:isCP() and vict ~= att then
-				CPAntiTK.damaged = (CPAntiTK.damaged or 0) + 1
-				for k,v in pairs( player.GetAll() ) do
+				att:SetNWInt( "cpantitk_hits", att:GetNWInt( "cpantitk_hits" ) + 1 )
+		if CPAntiTK.Config.Notify then
+			for k,v in pairs( player.GetAll() ) do
+			if IsValid( v ) and v:IsPlayer() and v:isCP() then
 				DarkRP.notify(v, 1, 4, att:Nick()..CPAntiTK.lang[CPAntiTK.lang.select].attacked..vict:Nick().."!")
-				end
-				DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].warned..CPAntiTK.damaged.."/"..CPAntiTK.demote)
-		   if CPAntiTK.damaged and CPAntiTK.damaged >= CPAntiTK.demote then
+			end
+		end
+			end
+				DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].warned..att:GetNWInt( "cpantitk_hits" ).."/"..CPAntiTK.demote)
+		   if att:GetNWInt( "cpantitk_hits" ) >= CPAntiTK.demote then
 							att:StripWeapons()
 							att:teamBan(table.HasValue(CPAntiTK.Config.cpjobs,att:Team()), CPAntiTK.Config.bantime)
 						timer.Simple(5,function() DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].willbedemote) end)
 						timer.Simple(7,function()
 							att:changeTeam( GAMEMODE.DefaultTeam, true )
-							CPAntiTK.damaged = nil
+							att:SetNWInt( "cpantitk_hits" )
 							for k,v in pairs( player.GetAll() ) do
 							DarkRP.notify(v, 1, 4, att:Nick()..CPAntiTK.lang[CPAntiTK.lang.select].demoted)
 							end
