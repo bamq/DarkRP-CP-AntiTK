@@ -1,4 +1,5 @@
 
+
 --[[-----------------------------------------------------------------------//
 * 
 * Created by bamq. (https://steamcommunity.com/id/bamq)
@@ -35,17 +36,21 @@ CPAntiTK.Config = CPAntiTK.Config or {}
 
 CPAntiTK.Config.LogToConsole			= true --Should a message be printed in console when this event occurs? / Показывать сообщение в консоли?
 CPAntiTK.Config.CanDamage				= false --Can CP damaged other CP? / Сможет ли нанести урон один CP другому CP?
-CPAntiTK.Config.Notify					= true	 --Make a notification for all CPs on server when CP attack other CP? / Сделать уведомление для всех CP на сервере, когда CP атакует другого CP?
-CPAntiTK.Config.cpjobs = { "TEAM_POLICE" , "TEAM_CHIEF" , "TEAM_MAYOR"  } --What kind of jobs will be banned? / Какие работы будут забанены?
-CPAntiTK.Config.bantime = 300 --Demote time / Время Разбана профессии
-CPAntiTK.demote = 10 --Number of hits / Кол-во попаданий
 
--- /// CONFIG /// --
+
+-- /// Demote System Config /// --
+CPAntiTK.Config.DemoteSystem			= false --Demote system / Система увольнения
+
+CPAntiTK.Config.Notify					= true	 --Make a notification on server for all CPs when CP attack other CP? / Сделать уведомление на сервере для всех CP, когда CP атакует другого CP?
+CPAntiTK.Config.BanTime = 1200 --Demote time / Время Разбана профессии
+CPAntiTK.Hits = 10 --Number of hits / Кол-во попаданий
+-- /// Demote System Config /// --
+
 
 -- /// LANGUAGE /// --
 CPAntiTK.lang = {}
 CPAntiTK.lang.select ={}
-CPAntiTK.lang.select = 1		--Change this number to change language / Измените это значение для смены языка
+CPAntiTK.lang.select = 2		--Change this number to change language / Измените это значение для смены языка
 CPAntiTK.lang[1] = {}			--English / Английский
 CPAntiTK.lang[2] = {}			--Russian / Русский
 
@@ -66,25 +71,30 @@ CPAntiTK.lang[2] = {	--Russian / Русский
 	demoted = " был уволен!  Причина: Стрельба по союзникам.",
 		
 }
-
 -- /// LANGUAGE /// --
+
+-- /// CONFIG /// --
+
 
 MsgN( "DarkRP CP AntiTK v" .. CPAntiTK.VERSION .. " initialized. Created by bamq." )
 
 hook.Add( "PlayerShouldTakeDamage", "CPAntiTK_PlayerShouldTakeDamage", function( vict, att )
 	if IsValid( vict ) and vict:IsPlayer() and vict:isCP() and IsValid( att ) and att:IsPlayer() and att:isCP() and vict ~= att then
+		if CPAntiTK.Config.DemoteSystem then
 				att:SetNWInt( "cpantitk_hits", att:GetNWInt( "cpantitk_hits" ) + 1 )
-		if CPAntiTK.Config.Notify then
-			for k,v in pairs( player.GetAll() ) do
-			if IsValid( v ) and v:IsPlayer() and v:isCP() then
+				if CPAntiTK.Config.Notify then
+				for k,v in pairs( player.GetAll() ) do
+				if IsValid( v ) and v:IsPlayer() and v:isCP() then
 				DarkRP.notify(v, 1, 4, att:Nick()..CPAntiTK.lang[CPAntiTK.lang.select].attacked..vict:Nick().."!")
-			end
+				end
+				end
+				end
+				DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].warned..att:GetNWInt( "cpantitk_hits" ).."/"..CPAntiTK.Hits)
 		end
-			end
-				DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].warned..att:GetNWInt( "cpantitk_hits" ).."/"..CPAntiTK.demote)
-		   if att:GetNWInt( "cpantitk_hits" ) >= CPAntiTK.demote then
+		if CPAntiTK.Config.DemoteSystem then
+		   if att:GetNWInt( "cpantitk_hits" ) >= CPAntiTK.Hits then
 							att:StripWeapons()
-							att:teamBan(table.HasValue(CPAntiTK.Config.cpjobs,att:Team()), CPAntiTK.Config.bantime)
+							att:teamBan(att:Team(), CPAntiTK.Config.bantime)
 						timer.Simple(5,function() DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].willbedemote) end)
 						timer.Simple(7,function()
 							att:changeTeam( GAMEMODE.DefaultTeam, true )
@@ -94,6 +104,7 @@ hook.Add( "PlayerShouldTakeDamage", "CPAntiTK_PlayerShouldTakeDamage", function(
 							end
 						end)
 		    end
+		end
 				if CPAntiTK.Config.LogToConsole then
 					MsgN( "[DarkRP CP AntiTK] CP " .. att:Nick() .. " (" .. att:SteamID() .. ") attempted to damage CP " .. vict:Nick() .. " (" .. vict:SteamID() .. "), negating." )
 				end
