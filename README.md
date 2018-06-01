@@ -4,6 +4,10 @@ A Civil Protection anti-teamkill addon for Garry's Mod DarkRP.
 ## Features:
 * Stops Civil Protection jobs from dealing team damage to other Civil Protection jobs.
 * Logs to console when this event occurs (configurable).
+* On/off damage.
+* Ban teams (optionally)
+* Rus/Eng languages
+* Easy to use
 
 ## Installation:
 * Download the latest release from the release page.
