@@ -29,7 +29,7 @@
 //-----------------------------------------------------------------------]]--
 
 CPAntiTK = CPAntiTK or {}
-CPAntiTK.VERSION = "1.2 [Edited by Taxin2012]"
+CPAntiTK.VERSION = "2.0 [Edited by Taxin2012]"
 CPAntiTK.Config = CPAntiTK.Config or {}
 
 -- /// CONFIG /// --
@@ -42,11 +42,7 @@ CPAntiTK.Config.CanDamage				= false --Can CP damaged other CP? / Сможет �
 CPAntiTK.Config.DemoteSystem			= false --Demote system / Система увольнения
 
 CPAntiTK.Config.Notify					= true	 --Make a notification on server for all CPs when CP attack other CP? / Сделать уведомление на сервере для всех CP, когда CP атакует другого CP?
-CPAntiTK.Config.JobsToBan = {
-TEAM_POLICE,
-TEAM_SWAT,
-TEAM_MAYOR
-}
+CPAntiTK.Config.JobsToBan = { TEAM_POLICE, TEAM_SWAT, TEAM_MAYOR } --Teams that will be banned / Работы, которые будут забанены
 CPAntiTK.Config.BanTime = 1200 --Demote time / Время Разбана профессии
 CPAntiTK.Hits = 10 --Number of hits / Кол-во попаданий
 -- /// Demote System Config /// --
