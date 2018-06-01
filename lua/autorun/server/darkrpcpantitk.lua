@@ -42,6 +42,11 @@ CPAntiTK.Config.CanDamage				= false --Can CP damaged other CP? / Сможет �
 CPAntiTK.Config.DemoteSystem			= false --Demote system / Система увольнения
 
 CPAntiTK.Config.Notify					= true	 --Make a notification on server for all CPs when CP attack other CP? / Сделать уведомление на сервере для всех CP, когда CP атакует другого CP?
+CPAntiTK.Config.JobsToBan = {
+TEAM_POLICE,
+TEAM_SWAT,
+TEAM_MAYOR
+}
 CPAntiTK.Config.BanTime = 1200 --Demote time / Время Разбана профессии
 CPAntiTK.Hits = 10 --Number of hits / Кол-во попаданий
 -- /// Demote System Config /// --
@@ -94,7 +99,9 @@ hook.Add( "PlayerShouldTakeDamage", "CPAntiTK_PlayerShouldTakeDamage", function(
 		if CPAntiTK.Config.DemoteSystem then
 		   if att:GetNWInt( "cpantitk_hits" ) >= CPAntiTK.Hits then
 							att:StripWeapons()
-							att:teamBan(att:Team(), CPAntiTK.Config.bantime)
+							for _, team in pairs( CPAntiTK.Config.JobsToBan ) do
+							att:teamBan(team, CPAntiTK.Config.bantime)
+							end
 						timer.Simple(5,function() DarkRP.notify(att, 1, 4, CPAntiTK.lang[CPAntiTK.lang.select].willbedemote) end)
 						timer.Simple(7,function()
 							att:changeTeam( GAMEMODE.DefaultTeam, true )
